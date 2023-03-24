@@ -1,0 +1,14 @@
+{
+  "name": "integration-tests",
+  "version": "0.0.1",
+  "description": "CoMSES Net integration/e2e tests",
+  "main": "index.ts",
+  "license": "MIT",
+  "scripts": {
+    "test": "cypress run"
+  },
+  "devDependencies": {
+    "cypress": "^12.8.1",
+    "typescript": "~4.8.4"
+  }
+}

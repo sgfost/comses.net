@@ -27,8 +27,9 @@ jobs:
     - name: build containers and run Django tests
       run: make test
 
-    - uses: cypress-io/github-action@v5
+    - name: run cypress integration tests
+      uses: cypress-io/github-action@v5
       with:
-        start: yarn test:integration
+        start: yarn test
         wait-on: 'http://localhost:8000, http://localhost:5000'
-        working-directory: frontend-next
+        working-directory: cypress
