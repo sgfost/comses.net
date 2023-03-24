@@ -26,3 +26,9 @@ jobs:
       uses: docker/setup-buildx-action@v2
     - name: build containers and run Django tests
       run: make test
+
+    - uses: cypress-io/github-action@v5
+      with:
+        start: yarn test:integration
+        wait-on: 'http://localhost:8000', 'http://localhost:5000'
+        working-directory: frontend-next
