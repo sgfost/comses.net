@@ -14,11 +14,16 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-
+    - name: start
+      uses: cypress-io/github-action@v5
+      with:
+        runTests: false
+    - name: bring up server
+      run: make deploy
     - name: run cypress integration tests
       uses: cypress-io/github-action@v5
       with:
-        start: make deploy
+        install: false
         wait-on: 'http://localhost:8000, http://localhost:5000'
         wait-on-timeout: 300
         working-directory: cypress
