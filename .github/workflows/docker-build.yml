@@ -18,6 +18,7 @@ jobs:
       uses: cypress-io/github-action@v5
       with:
         runTests: false
+        working-directory: cypress
     - name: bring up server
       run: make deploy
     - name: run cypress integration tests
