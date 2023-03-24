@@ -133,5 +133,5 @@ clean:
 
 .PHONY: test
 test: build
-	docker compuse up -d
+	docker compose up -d
 	docker compose exec server /code/deploy/test.sh
