@@ -139,5 +139,7 @@ test: build
 .PHONY: e2e
 e2e: DEPLOY_ENVIRONMENT=e2e
 e2e: build
+	docker compose run server inv collectstatic
+	django/deploy/wait-for-it.sh localhost:8000 -t 120 -- \
 	docker compose run --rm e2e yarn test
 	docker compose down

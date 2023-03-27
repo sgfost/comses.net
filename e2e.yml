@@ -7,7 +7,6 @@ services:
     volumes:
       - ./e2e/cypress:/code/cypress
       - ./e2e/cypress.config.js:/code/cypress.config.js
-      - ./django/deploy/wait-for-it.sh:/code/wait-for-it.sh
     depends_on:
       - server
   js:
