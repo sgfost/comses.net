@@ -133,6 +133,7 @@ MIDDLEWARE = [
     "csp.middleware.CSPMiddleware",
     "waffle.middleware.WaffleMiddleware",
     "wagtail.contrib.redirects.middleware.RedirectMiddleware",
+    "djangorestframework_camel_case.middleware.CamelCaseMiddleWare",
 ]
 
 AUTHENTICATION_BACKENDS = (
@@ -437,7 +438,13 @@ REST_FRAMEWORK = {
     ),
     "DEFAULT_RENDERER_CLASSES": (
         "core.renderers.RootContextHTMLRenderer",
-        "rest_framework.renderers.JSONRenderer",
+        "djangorestframework_camel_case.render.CamelCaseJSONRenderer",
+        # "rest_framework.renderers.JSONRenderer",
+    ),
+    "DEFAULT_PARSER_CLASSES": (
+        "djangorestframework_camel_case.parser.CamelCaseFormParser",
+        "djangorestframework_camel_case.parser.CamelCaseMultiPartParser",
+        "djangorestframework_camel_case.parser.CamelCaseJSONParser",
     ),
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework.authentication.SessionAuthentication",

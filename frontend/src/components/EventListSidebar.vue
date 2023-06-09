@@ -46,8 +46,8 @@ const query = computed(() => {
   const query = url.get("query") ?? "";
   return searchUrl({
     query,
-    start_date__gte: values.startDate?.toISOString(),
-    submission_deadline__gte: values.submissionDeadline?.toISOString(),
+    startDate_gte: values.startDate?.toISOString(),
+    submissionDeadline_gte: values.submissionDeadline?.toISOString(),
     tags: values.tags?.map(tag => tag.name),
   });
 });
