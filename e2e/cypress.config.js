@@ -6,6 +6,6 @@ module.exports = defineConfig({
     specPattern: ["cypress/e2e/**/*.spec.ts"],
     supportFile: false,
     screenshotOnRunFailure: false,
-    video: false,
+    video: true,
   }
 });
