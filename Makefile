@@ -23,6 +23,7 @@ ENV_TEMPLATE=${DEPLOY_CONF_DIR}/.env.template
 BORG_REPO_URL := https://example.com/repo.tar.xz
 BORG_REPO_PATH=${BUILD_DIR}/repo.tar.xz
 REPO_BACKUPS_PATH=${DOCKER_SHARED_DIR}/backups
+E2E_REPO_BACKUPS_PATH=${DOCKER_SHARED_DIR}/e2e/backups
 
 include config.mk
 include .env
@@ -84,7 +85,7 @@ release-version: .env
 .PHONY: docker-compose.yml
 docker-compose.yml: base.yml dev.yml staging.yml prod.yml config.mk $(PGPASS_PATH) release-version
 	case "$(DEPLOY_ENVIRONMENT)" in \
-	  dev|staging|e2e) docker compose -f base.yml -f $(DEPLOY_ENVIRONMENT).yml config > docker-compose.yml;; \
+	  dev|staging) docker compose -f base.yml -f $(DEPLOY_ENVIRONMENT).yml config > docker-compose.yml;; \
 	  prod) docker compose -f base.yml -f staging.yml -f $(DEPLOY_ENVIRONMENT).yml config > docker-compose.yml;; \
 	  *) echo "invalid environment. must be either dev, staging or prod" 1>&2; exit 1;; \
 	esac
@@ -139,11 +140,22 @@ clean_deploy: clean
 .PHONY: test
 test: build
 	docker compose run --rm server /code/deploy/test.sh
+	
+$(E2E_REPO_BACKUPS_PATH):
+	@echo "$(E2E_REPO_BACKUPS_PATH) did not exist, creating now"
+	mkdir -p $(E2E_REPO_BACKUPS_PATH)
 
-.PHONY: e2e
-e2e: DEPLOY_ENVIRONMENT=e2e
-e2e: build
-	docker compose up -d
-	docker compose exec server inv collectstatic
-	docker compose run --rm --no-deps e2e npm run test
-	docker compose down > /dev/null 2>&1
+.PHONY: build-e2e
+build-e2e: docker-compose.yml secrets $(DOCKER_SHARED_DIR)
+	docker compose -f docker-compose.yml -f e2e.yml build
+
+.PHONY: deploy-e2e
+deploy-e2e: build-e2e $(BORG_REPO_PATH) | $(E2E_REPO_BACKUPS_PATH)
+	sudo chown -R ${USER}: $(E2E_REPO_BACKUPS_PATH)
+	# create repo directory if it doesn't exist
+	mkdir -p $(E2E_REPO_BACKUPS_PATH)/repo
+	tar -Jxf $(BORG_REPO_PATH) -C $(E2E_REPO_BACKUPS_PATH)
+	docker compose -f docker-compose.yml -f e2e.yml up -d
+	docker compose -f docker-compose.yml -f e2e.yml exec server inv borg.restore --force
+	docker compose -f docker-compose.yml -f e2e.yml exec server ./manage.py migrate
+	docker compose -f docker-compose.yml -f e2e.yml exec server inv prepare
