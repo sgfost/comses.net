@@ -356,6 +356,7 @@ class CodebaseFilter(filters.BaseFilterBackend):
         published_start_date = query_params.get("published_after")
         published_end_date = query_params.get("published_before")
         peer_review_status = query_params.get("peer_review_status")
+        programming_languages = query_params.getlist("languages")
         # platform = query_params.get('platform')
         # programming_language = query_params.get('programming_language')
         tags = query_params.getlist("tags")
@@ -382,7 +383,24 @@ class CodebaseFilter(filters.BaseFilterBackend):
                 criteria.update(peer_reviewed=True)
             elif peer_review_status == "not_reviewed":
                 criteria.update(peer_reviewed=False)
-        return get_search_queryset(qs, queryset, tags=tags, criteria=criteria)
+
+        if programming_languages:
+            codebase_ids = list(
+                CodebaseRelease.objects.filter(
+                    programming_languages__name__in=programming_languages
+                ).values_list("codebase_id", flat=True)
+            )
+            criteria.update(id__in=codebase_ids)
+
+        results = get_search_queryset(
+            qs,
+            queryset,
+            tags=tags,
+            criteria=criteria,
+        )
+        language_facets = results.facet("release_language_names")
+        logger.debug(language_facets)  # not sure how to get this to the template
+        return results
 
 
 class CodebaseViewSet(SpamCatcherViewSetMixin, CommonViewSetMixin, HtmlNoDeleteViewSet):

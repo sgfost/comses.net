@@ -627,6 +627,8 @@ class Codebase(index.Indexed, ModeratedContent, ClusterableModel):
         ),
         # filter and sort fields
         index.FilterField("is_marked_spam"),
+        index.FilterField("id"),
+        index.FilterField("release_language_names"),
         index.FilterField("last_modified"),
         index.FilterField("peer_reviewed"),
         index.FilterField("featured"),
@@ -801,6 +803,13 @@ class Codebase(index.Indexed, ModeratedContent, ClusterableModel):
 
     def get_all_release_programming_languages(self):
         return " ".join(Codebase.objects.get_all_release_programming_languages(self))
+
+    def release_language_names(self):
+        return list(
+            self.releases.exclude(programming_languages__isnull=True).values_list(
+                "programming_languages__name", flat=True
+            )
+        )
 
     def download_count(self):
         return CodebaseReleaseDownload.objects.filter(
