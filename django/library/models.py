@@ -2729,7 +2729,7 @@ class CodeMeta:
     def to_json(self):
         """Returns a JSON string of this codemeta data"""
         # FIXME: should ideally validate metadata as well
-        return json.dumps(self.metadata)
+        return json.dumps(self.metadata, indent=4)
 
     def to_dict(self):
         return self.metadata.copy()
