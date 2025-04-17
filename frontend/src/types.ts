@@ -398,3 +398,20 @@ export interface CodebaseGitRemoteForm {
   shouldPush?: boolean;
   shouldImport?: boolean;
 }
+
+export interface FeedItem {
+  title: string;
+  summary?: string;
+  author?: string;
+  link: string;
+  date?: Date;
+  thumbnail?: string;
+  doi?: string;
+}
+
+export interface FeedProps {
+  feedUrl: string;
+  limit: number;
+  datePrefix?: string;
+  authorPrefix?: string;
+}

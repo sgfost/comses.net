@@ -71,6 +71,7 @@ services:
       - github_integration_app_webhook_secret
       - hcaptcha_secret
       - mail_api_key
+      - youtube_api_key
     volumes:
       - ./deploy/elasticsearch.conf.d:/etc/elasticsearch
       - ./docker/shared:/shared
@@ -110,6 +111,8 @@ secrets:
     file: ./build/secrets/mail_api_key
   orcid_client_secret:
     file: ./build/secrets/orcid_client_secret
+  youtube_api_key:
+    file: ./build/secrets/youtube_api_key
 
 volumes:
   esdata:
