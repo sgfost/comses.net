@@ -90,7 +90,8 @@ urlpatterns = [
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
-if not settings.DEPLOY_ENVIRONMENT.is_production:
+if settings.DEPLOY_ENVIRONMENT.is_development:
+    print("XXXDEPLOY_ENVIRONMENTXXX: ", settings.DEPLOY_ENVIRONMENT)
     import debug_toolbar
 
     urlpatterns += [
@@ -99,7 +100,6 @@ if not settings.DEPLOY_ENVIRONMENT.is_production:
         path("__debug__/", include(debug_toolbar.urls)),
     ]
 
-if settings.DEPLOY_ENVIRONMENT.is_development:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 # NB: wagtail_urls are the catchall, must be last
