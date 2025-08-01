@@ -1822,7 +1822,9 @@ class CodebaseRelease(index.Indexed, ClusterableModel):
             # if this release is peer reviewed schedule a DOI minting
             from .tasks import schedule_mint_public_doi
 
-            schedule_mint_public_doi(self, settings.DEPLOY_ENVIRONMENT.is_development)
+            schedule_mint_public_doi(
+                self, dry_run=settings.DEPLOY_ENVIRONMENT.is_development
+            )
 
     def _publish(self):
         if not self.live:
