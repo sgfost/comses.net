@@ -1,6 +1,12 @@
 from .test import *
 
 DEBUG = True
+DEPLOY_ENVIRONMENT = Environment.TEST
+# Base URL to use when referring to full URLs within the Wagtail admin backend -
+# e.g. in notification emails. Don't include '/admin' or a trailing slash
+# FIXME: needs to be overridden in staging and prod after updating DEPLOY_ENVIRONMENT which is less than ideal
+
+WAGTAILADMIN_BASE_URL = BASE_URL = DEPLOY_ENVIRONMENT.base_url
 
 DJANGO_VITE_DEV_MODE = False
 

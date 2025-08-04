@@ -1,6 +1,5 @@
 -r requirements.txt
 # test requirements
-black
 coverage
 coveralls
 # https://hypothesis.readthedocs.io/en/latest/django.html

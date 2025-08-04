@@ -2,7 +2,6 @@ from os import path
 
 from .defaults import *
 
-
 DEPLOY_ENVIRONMENT = Environment.TEST
 
 ALLOWED_HOSTS = ["localhost", "127.0.0.1", "server"]

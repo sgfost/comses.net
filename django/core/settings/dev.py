@@ -3,14 +3,20 @@ from .defaults import *
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+DEPLOY_ENVIRONMENT = Environment.DEVELOPMENT
+# Base URL to use when referring to full URLs within the Wagtail admin backend -
+# e.g. in notification emails. Don't include '/admin' or a trailing slash
+# FIXME: needs to be overridden in staging and prod after updating DEPLOY_ENVIRONMENT which is less than ideal
+
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
-MIDDLEWARE += ["debug_toolbar.middleware.DebugToolbarMiddleware"]
 
-INSTALLED_APPS += [
-    "debug_toolbar",
-    "fixture_magic",
-]
+if not TESTING:
+    INSTALLED_APPS += [
+        "debug_toolbar",
+        "fixture_magic",
+    ]
+    MIDDLEWARE += ["debug_toolbar.middleware.DebugToolbarMiddleware"]
 
 ALLOWED_HOSTS = ["localhost", "127.0.0.1", "server"]
 
