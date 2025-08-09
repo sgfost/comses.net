@@ -30,12 +30,13 @@ def read_secret(file, fallback=""):
 
 EnvConfig = namedtuple("EnvConfig", ["base_url", "label"])
 
+
 class Environment(Enum):
     DEVELOPMENT = EnvConfig(base_url="http://localhost:8000", label="DEVELOPMENT")
     STAGING = EnvConfig(base_url="https://staging.comses.net", label="STAGING")
     PRODUCTION = EnvConfig(base_url="https://www.comses.net", label="PRODUCTION")
     # TEST is used for local and github testing, not a real environment
-    TEST = EnvConfig(base_url="http://127.0.0.1:8000", label="TEST")
+    TEST = EnvConfig(base_url="http://localhost:8000", label="TEST")
 
     @property
     def base_url(self):
@@ -62,7 +63,14 @@ class Environment(Enum):
         return self == Environment.TEST
 
 
-DEPLOY_ENVIRONMENT = None  # override in specific settings files
+def set_environment(env: Environment):
+    global DEPLOY_ENVIRONMENT, WAGTAILADMIN_BASE_URL, BASE_URL
+    DEPLOY_ENVIRONMENT = env
+    # Base URL to use when referring to full URLs within the Wagtail admin backend -
+    # e.g. in notification emails. Don't include '/admin' or a trailing slash
+    WAGTAILADMIN_BASE_URL = BASE_URL = env.base_url
+    return DEPLOY_ENVIRONMENT, WAGTAILADMIN_BASE_URL, BASE_URL
+
 
 # go two levels up for root project directory
 PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))

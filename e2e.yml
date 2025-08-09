@@ -4,6 +4,9 @@ services:
     command: tail -f /dev/null
     healthcheck:
       disable: true
+  elasticsearch:
+    environment:
+      - discovery.type=single-node
   e2edb:
     image: postgis/postgis:16-3.5
     secrets:
@@ -23,6 +26,8 @@ services:
     command: ["npm", "run", "build"]
     environment:
       NODE_ENV: "e2e"
+    volumes:
+      - ./frontend:/code
   server:
     depends_on:
       db:

@@ -3,10 +3,9 @@ from .defaults import *
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-DEPLOY_ENVIRONMENT = Environment.DEVELOPMENT
-# Base URL to use when referring to full URLs within the Wagtail admin backend -
-# e.g. in notification emails. Don't include '/admin' or a trailing slash
-# FIXME: needs to be overridden in staging and prod after updating DEPLOY_ENVIRONMENT which is less than ideal
+DEPLOY_ENVIRONMENT, WAGTAILADMIN_BASE_URL, BASE_URL = set_environment(
+    Environment.DEVELOPMENT
+)
 
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
