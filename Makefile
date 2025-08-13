@@ -32,7 +32,7 @@ include .env
 
 .PHONY: build
 build: docker-compose.yml secrets $(DOCKER_SHARED_DIR)
-	docker compose build --pull
+	docker compose build --pull -q
 
 $(BORG_REPO_PATH):
 	wget -c ${BORG_REPO_URL} -P ${BUILD_DIR}
@@ -151,7 +151,8 @@ $(E2E_REPO_PATH):
 
 .PHONY: e2e
 e2e: docker-compose.yml secrets $(DOCKER_SHARED_DIR) $(E2E_REPO_PATH)
-	docker compose -f docker-compose.yml -f e2e.yml up -d --build
+	docker compose -f docker-compose.yml -f e2e.yml up -d --build --quiet-pull
 	docker compose -f docker-compose.yml -f e2e.yml exec server bash -c "\
 		inv borg.restore --force && \
+		inv db.init && \
 		inv prepare"

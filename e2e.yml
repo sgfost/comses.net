@@ -24,6 +24,8 @@ services:
       POSTGRES_PASSWORD_FILE: /run/secrets/db_password
   vite:
     command: ["npm", "run", "build"]
+    ports:
+      - "127.0.0.1:5173:5173"
     environment:
       NODE_ENV: "e2e"
     volumes:
@@ -45,5 +47,7 @@ services:
       interval: 30s
       timeout: 10s
       retries: 5
+    ports:
+      - "127.0.0.1:8000:8000"
     environment:
       DJANGO_SETTINGS_MODULE: "core.settings.e2e"
